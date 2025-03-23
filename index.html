@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlanifyMe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fce4ec;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #ab47bc;
+            color: #fff;
+            text-align: center;
+            padding: 1em 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #8e24aa;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap; /* İçerik taşarsa satır atlamasını sağlar */
+            justify-content: center; /* Menü öğelerini ortalar */
+            margin: 0;
+        }
+
+        nav ul li {
+            margin: 0 0.5em; /* Sağ ve sol boşlukları azaltarak daha fazla öğe sığdırır */
+        }
+
+        nav ul li a {
+            color: #000;
+            text-decoration: none;
+            padding: 1em 1.5em; /* Menü öğelerinin genişliğini artırır */
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #6a1b9a;
+            color: #fff;
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            padding: 2em;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        section {
+            background-color: #fff;
+            padding: 1em;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin: 1em 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #ab47bc;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin: 0.5em 0 0.2em;
+            width: 80%;
+            text-align: left;
+            color: #ab47bc;
+        }
+
+        input, select, textarea {
+            padding: 0.5em;
+            margin-bottom: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 80%;
+        }
+
+        button {
+            padding: 0.7em;
+            background-color: #ab47bc;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 50%;
+        }
+
+        button:hover {
+            background-color: #8e24aa;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 80%;
+        }
+
+        li {
+            background-color: #f3e5f5;
+            padding: 1em;
+            margin: 0.5em 0;
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background-color: #ab47bc;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .container {
+            width: 100%;
+            padding: 2em 0;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1em;
+            width: 100%;
+        }
+
+        .nav-tabs button {
+            background-color: #8e24aa;
+            border: none;
+            color: white;
+            padding: 1em;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .nav-tabs button:hover {
+            background-color: #6a1b9a;
+        }
+
+        .nav-tabs button.active {
+            background-color: #ab47bc;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 8px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1em;
+        }
+
+        .profile img {
+            border-radius: 50%;
+            margin-right: 1em;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notification {
+            background-color: #ffe082;
+            border-radius: 4px;
+            padding: 1em;
+            margin: 1em 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-icon {
+            margin-right: 1em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>PlanifyMe</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">🏠 Ana Sayfa</a></li>
+                <li><a href="#groups">👥 Gruplar</a></li>
+                <li><a href="#expenses">💸 Harcamalar</a></li>
+                <li><a href="#debts">💳 Borçlar</a></li>
+                <li><a href="#reports">📊 Raporlar</a></li>
+                <li><a href="#events">📅 Etkinlikler</a></li>
+                <li><a href="#social">📢 Paylaşım</a></li>
+                <li><a href="#profile">👤 Profil</a></li>
+                <li><a href="#notifications">🔔 Bildirimler</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="home" class="container">
+            <h2>Hoş Geldiniz</h2>
+            <p>PlanifyMe ile arkadaşlarınızla birlikte harcamalarınızı ve etkinliklerinizi kolayca planlayın ve yönetin!</p>
+        </section>
+        <section id="groups" class="container hidden">
+            <h2>Gruplar</h2>
+            <div class="nav-tabs">
+                <button class="active" onclick="showTab('group-create')">Grup Oluştur</button>
+                <button onclick="showTab('group-manage')">Grupları Yönet</button>
+            </div>
+            <div id="group-create" class="tab-content">
+                <form id="group-form">
+                    <label for="group-name">Grup Adı:</label>
+                    <input type="text" id="group-name" name="group-name" required>
+                    <label for="group-members">Grup Üyeleri:</label>
+                    <input type="text" id="group-members" name="group-members" placeholder="Virgülle ayırın" required>
+                    <button type="submit">Grup Oluştur</button>
+                </form>
+                <ul id="group-list"></ul>
+            </div>
+            <div id="group-manage" class="tab-content hidden">
+                <h3>Grupları Yönet</h3>
+                <ul id="manage-group-list"></ul>
+            </div>
+        </section>
+        <section id="expenses" class="container hidden">
+            <h2>Harcamalar</h2>
+            <div class="nav-tabs">
+                <button class="active" onclick="showTab('expense-add')">Harcama Ekle</button>
+                <button onclick="showTab('expense-view')">Harcamaları Görüntüle</button>
+            </div>
+            <div id="expense-add" class="tab-content">
+                <form id="expense-form">
+                    <label for="expense-description">Harcama Açıklaması:</label>
+                    <input type="text" id="expense-description" name="expense-description" required>
+                    <label for="expense-amount">Tutar:</label>
+                    <input type="number" id="expense-amount" name="expense-amount" required>
+                    <label for="expense-category">Kategori:</label>
+                    <select id="expense-category" name="expense-category" required>
+                        <option value="Seyahat">Seyahat</option>
+                        <option value="Restoran">Restoran</option>
+                        <option value="Konaklama">Konaklama</option>
+                        <option value="Alışveriş">Alışveriş</option>
+                    </select>
+                    <label for="expense-participants">Katılımcılar:</label>
+                    <input type="text" id="expense-participants" name="expense-participants" placeholder="Virgülle ayırın" required>
+                    <button type="submit">Harcama Ekle</button>
+                </form>
+                <ul id="expense-list"></ul>
+            </div>
+            <div id="expense-view" class="tab-content hidden">
+                <h3>Harcamaları Görüntüle</h3>
+                <ul id="view-expense-list"></ul>
+            </div>
+        </section>
+        <section id="debts" class="container hidden">
+            <h2>Borçlar</h2>
+            <ul id="debt-list"></ul>
+        </section>
+        <section id="reports" class="container hidden">
+            <h2>Raporlar</h2>
+            <p>Harcamalarınızın ve borçlarınızın raporlarını burada görebilirsiniz.</p>
+            <canvas id="expense-chart"></canvas>
+        </section>
+        <section id="events" class="container hidden">
+            <h2>Etkinlikler</h2>
+            <form id="event-form">
+                <label for="event-name">Etkinlik Adı:</label>
+                <input type="text" id="event-name" name="event-name" required>
+                <label for="event-date">Tarih:</label>
+                <input type="date" id="event-date" name="event-date" required>
+                <label for="event-location">Yer:</label>
+                <input type="text" id="event-location" name="event-location" required>
+                <label for="event-participants">Katılımcılar:</label>
+                <input type="text" id="event-participants" name="event-participants" placeholder="Virgülle ayırın" required>
+                <button type="submit">Etkinlik Ekle</button>
+            </form>
+            <ul id="event-list"></ul>
+        </section>
+        <section id="social" class="container hidden">
+            <h2>Sosyal Paylaşım ve Öneriler</h2>
+            <form id="review-form">
+                <label for="review-activity">Aktivite:</label>
+                <input type="text" id="review-activity" name="review-activity" required>
+                <label for="review-comment">Yorum:</label>
+                <textarea id="review-comment" name="review-comment" required></textarea>
+                <button type="submit">Yorum Ekle</button>
+            </form>
+            <ul id="review-list"></ul>
+        </section>
+        <section id="profile" class="container hidden">
+            <h2>Profil</h2>
+            <div class="profile">
+                <img src="https://via.placeholder.com/100" alt="Profil Fotoğrafı">
+                <div class="profile-info">
+                    <h3>Kullanıcı Adı</h3>
+                    <p>Email: user@example.com</p>
+                    <p>Kayıt Tarihi: 2025-01-01</p>
+                </div>
+            </div>
+            <button onclick="showModal()">Profili Düzenle</button>
+        </section>
+        <section id="notifications" class="container hidden">
+            <h2>Bildirimler</h2>
+            <div class="notification">
+                <div class="notification-icon">🔔</div>
+                <div class="notification-info">
+                    <p>Yeni bir etkinlik oluşturuldu.</p>
+                    <span>5 dakika önce</span>
+                </div>
+            </div>
+            <div class="notification">
+                <div class="notification-icon">🔔</div>
+                <div class="notification-info">
+                    <p>Bir grup üyesi harcama ekledi.</p>
+                    <span>10 dakika önce</span>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 PlanifyMe</p>
+    </footer>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="profile-form">
+                <label for="profile-username">Kullanıcı Adı:</label>
+                <input type="text" id="profile-username" name="profile-username" required>
+                <label for="profile-email">Email:</label>
+                <input type="email" id="profile-email" name="profile-email" required>
+                <button type="submit">Kaydet</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuItems = document.querySelectorAll('nav ul li a');
+            const sections = document.querySelectorAll('section');
+            const groupForm = document.getElementById('group-form');
+            const groupList = document.getElementById('group-list');
+            const manageGroupList = document.getElementById('manage-group-list');
+            const expenseForm = document.getElementById('expense-form');
+            const expenseList = document.getElementById('expense-list');
+            const viewExpenseList = document.getElementById('view-expense-list');
+            const debtList = document.getElementById('debt-list');
+            const eventForm = document.getElementById('event-form');
+            const eventList = document.getElementById('event-list');
+            const reviewForm = document.getElementById('review-form');
+            const reviewList = document.getElementById('review-list');
+            const profileForm = document.getElementById('profile-form');
+            const modal = document.getElementById('myModal');
+            const span = document.getElementsByClassName('close')[0];
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    sections.forEach(section => {
+                        section.classList.add('hidden');
+                    });
+                    const target = document.querySelector(item.getAttribute('href'));
+                    target.classList.remove('hidden');
+                });
+            });
+
+            if (groupForm) {
+                groupForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const groupName = document.getElementById('group-name').value;
+                    const groupMembers = document.getElementById('group-members').value.split(',');
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Grup: ${groupName}, Üyeler: ${groupMembers.join(', ')}`;
+                    groupList.appendChild(listItem);
+
+                    const manageListItem = document.createElement('li');
+                    manageListItem.textContent = `Grup: ${groupName}, Üyeler: ${groupMembers.join(', ')}`;
+                    manageGroupList.appendChild(manageListItem);
+
+                    groupForm.reset();
+                });
+            }
+
+            if (expenseForm) {
+                expenseForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const description = document.getElementById('expense-description').value;
+                    const amount = document.getElementById('expense-amount').value;
+                    const category = document.getElementById('expense-category').value;
+                    const participants = document.getElementById('expense-participants').value.split(',');
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Harcama: ${description}, Tutar: ${amount} TL, Kategori: ${category}, Katılımcılar: ${participants.join(', ')}`;
+                    expenseList.appendChild(listItem);
+
+                    const viewListItem = document.createElement('li');
+                    viewListItem.textContent = `Harcama: ${description}, Tutar: ${amount} TL, Kategori: ${category}, Katılımcılar: ${participants.join(', ')}`;
+                    viewExpenseList.appendChild(viewListItem);
+
+                    expenseForm.reset();
+                });
+            }
+
+            if (eventForm) {
+                eventForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const eventName = document.getElementById('event-name').value;
+                    const eventDate = document.getElementById('event-date').value;
+                    const eventLocation = document.getElementById('event-location').value;
+                    const eventParticipants = document.getElementById('event-participants').value.split(',');
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Etkinlik: ${eventName}, Tarih: ${eventDate}, Yer: ${eventLocation}, Katılımcılar: ${eventParticipants.join(', ')}`;
+                    eventList.appendChild(listItem);
+                    eventForm.reset();
+                });
+            }
+
+            if (reviewForm) {
+                reviewForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const activity = document.getElementById('review-activity').value;
+                    const comment = document.getElementById('review-comment').value;
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Aktivite: ${activity}, Yorum: ${comment}`;
+                    reviewList.appendChild(listItem);
+                    reviewForm.reset();
+                });
+            }
+
+            if (profileForm) {
+                profileForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('profile-username').value;
+                    const email = document.getElementById('profile-email').value;
+                    // Profil bilgilerini güncelleme işlemleri burada yapılabilir
+                    modal.style.display = 'none';
+                });
+            }
+
+            // Modal kapama
+            span.onclick = function() {
+                modal.style.display = 'none';
+            }
+
+            // Modal kapama (pencere tıklanırsa)
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        });
+
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.add('hidden');
+            });
+
+            const activeTab = document.getElementById(tabId);
+            activeTab.classList.remove('hidden');
+
+            const buttons = document.querySelectorAll('.nav-tabs button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            const activeButton = document.querySelector(`.nav-tabs button[onclick="showTab('${tabId}')"]`);
+            activeButton.classList.add('active');
+        }
+
+        function showModal() {
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
